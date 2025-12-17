@@ -6,6 +6,7 @@
             </path>
         </svg>
     </button>
+ 
     <ul class="flex items-center">
         <li>
             <p class="text-gray-400">@yield('nav-title')</p>

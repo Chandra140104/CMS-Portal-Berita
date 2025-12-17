@@ -24,6 +24,7 @@
     @vite('resources/css/app.css')
 </head>
 
+<section style="background-color:darkblue">
 <body>
 
     <!-- NAV BAR -->
@@ -31,9 +32,8 @@
         <nav class="bg-white border-gray-200 dark:bg-gray-900">
             <div class="flex flex-wrap justify-between items-center mx-auto max-w-screen-xl p-4">
                 <a href="{{ route('welcome') }}" class="flex items-center space-x-3 rtl:space-x-reverse">
-                    <img src="/images/logo2.png" class="h-8" alt="Portal Berita Logo">
-                    <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">Portal
-                        Berita</span>
+                    <img src="/images/logo2.png" class="h-8" alt="Info BNN Kota Kediri Logo">
+                    <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">INFO BNN KOTA KEDIRI</span>
                 </a>
                 <div class="flex items-center space-x-6 rtl:space-x-reverse">
                     <a href="{{ route('semua-berita') }}" type="button"
@@ -100,7 +100,7 @@
 
     <div class="container w-5/6 flex flex-col flex-warp mx-auto py-5 gap-4">
         <div class="mb-6">
-            <h1 class="text-5xl font-black">Kategori : {{ $kategori->kategori->nama_kategori }}</h1>
+            <h1 style="color:white;"class="text-5xl font-black">Kategori : {{ $kategori->kategori->nama_kategori }}</h1>
         </div>
         <div class="flex flex-wrap w-screen gap-2">
             @foreach ($beritas as $item)
@@ -133,10 +133,10 @@
         </div>
     </div>
     {{ $beritas->links() }}
-
+</section>
     <!-- FOOTER -->
     <div class="block text-sm text-gray-500 sm:text-center dark:text-gray-400 mb-10 mt-20">
-    <span>© 2024 - Portal Berita</span>
+    <span>© 2024 - Info BNN Kota Kediri</span>
     </div>
     <!-- END OF FOOTER -->
 

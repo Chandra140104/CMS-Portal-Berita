@@ -5,10 +5,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Portal Berita</title>
+    <title>Info BNN Kota kediri</title>
 
     <!-- Favicon --->
-    <link rel="icon" href="{{ url('/images/favicon.png') }}">
+    <link rel="icon" href="{{ url('/images/favicon2.png') }}">
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
@@ -31,7 +31,7 @@
         <nav class="bg-white border-gray-200 dark:bg-gray-900">
             <div class="flex flex-wrap justify-between items-center mx-auto max-w-screen-xl p-4">
                 <a href="{{ route('welcome') }}" class="flex items-center space-x-3 rtl:space-x-reverse">
-                    <img src="/images/logo.png" class="h-8" alt="Portal Berita Logo">
+                    <img src="/images/logo2.png" class="h-8" alt="Portal Berita Logo">
                     <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">Portal
                         Berita</span>
                 </a>

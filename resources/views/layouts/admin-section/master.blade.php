@@ -5,10 +5,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Portal Berita | @yield('title')</title>
+    <title>Info BNN Kota Kediri | @yield('title')</title>
 
     <!-- Favicon --->
-    <link rel="icon" href="{{ url('/images/favicon.png') }}">
+    <link rel="icon" href="{{ url('/images/favicon2.png') }}">
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">

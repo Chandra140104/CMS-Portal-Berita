@@ -34,12 +34,12 @@
         <div class="mt-10 bg-white rounded-md border border-gray-100 p-6 shadow-md shadow-black/5">
             <div class="flex flex-col md:flex-row items-center">
                 <div class="w-full md:w-1/3 mb-6 md:mb-0">
-                    <img src="{{ asset('images/logo.jpg') }}" alt="Logo" class="w-full h-auto rounded-md">
+                    <img src="{{ asset('images/logo2.png') }}" alt="Logo" class="w-full h-auto rounded-md">
                 </div>
                 <div class="w-full md:w-2/3 md:pl-6">
                     <h2 class="text-xl font-semibold mb-2">Tentang</h2>
                     <p class="text-gray-600">
-                    Content Management System Portal Berita
+                    Dashboard System Portal Berita
                     </p>
                 </div>
             </div>

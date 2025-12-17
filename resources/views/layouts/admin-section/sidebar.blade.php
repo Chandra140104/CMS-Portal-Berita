@@ -1,8 +1,8 @@
-<div class="flex flex-col justify-between fixed left-0 top-0 w-64 h-full bg-blue-700 p-4">
+<div class="flex flex-col justify-between fixed left-0 top-0 w-64 h-full bg-blue-900 p-4">
     <div>
         <a href="{{ route('admin') }}" class="flex item-center pb-4 border-b border-b-gray-800">
-            <img src="/images/favicon.png" alt="Portal Berita Logo" class="w-7 h-7 object-cover">
-            <span class="text-lg font-bold text-white ml-3">Indo Berita</span>
+            <img src="/images/favicon2.png" alt="Portal Berita Logo" class="w-7 h-7 object-cover">
+            <span class="text-lg font-bold text-white ml-3">Admin BNN Kota Kediri</span>
         </a>
         <ul class="mt-4">
             <li class="mb-1">

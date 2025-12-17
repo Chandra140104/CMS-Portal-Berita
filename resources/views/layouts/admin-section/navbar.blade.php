@@ -14,7 +14,7 @@
     <ul class="ml-auto flex items-center">
         <li>
             <a href="#" type="button" class="mt-2 ml-2">
-                <img src="/images/logo.png" alt="Profile"
+                <img src="/images/logo2.png" alt="Profile"
                     class="w-8 h-8 rounded-full border border-gray-100 hover:bg-gray-100">
             </a>
         </li>

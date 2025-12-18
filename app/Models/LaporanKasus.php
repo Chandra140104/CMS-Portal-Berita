@@ -19,7 +19,6 @@ class LaporanKasus extends Model
         'terlapor_alamat',
 
         'foto_lokasi_path',
-        'foto_kendaraan_path',
 
         'jenis_narkoba',
         'jenis_narkoba_lainnya',
@@ -31,8 +30,6 @@ class LaporanKasus extends Model
 
         'terlapor_profesi',
         'kantor_alamat',
-
-        'kendaraan_info_plat',
 
         'uraian_transaksi',
         'lokasi_transaksi',

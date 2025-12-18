@@ -66,4 +66,7 @@ Route::prefix('admin')->middleware(['auth', 'hakakses:admin,editor'])->group(fun
         Route::put('/edit/{id}', 'update')->name('proses-edit-pengguna');
         Route::get('/{id}', 'destroy')->name('hapus-pengguna');
     });
+
+    Route::get('/lapor-kasus', [LaporanKasusController::class, 'create'])->name('laporan-kasus.create');
+    Route::post('/lapor-kasus', [LaporanKasusController::class, 'store'])->name('laporan-kasus.store');
 });

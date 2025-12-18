@@ -31,14 +31,12 @@
         <nav class="bg-white border-gray-200 dark:bg-gray-900">
             <div class="flex flex-wrap justify-between items-center mx-auto max-w-screen-xl p-4">
                 <a href="{{ route('welcome') }}" class="flex items-center space-x-3 rtl:space-x-reverse">
-                    <img src="/images/logo.png" class="h-8" alt="Portal Berita Logo">
-                    <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">Portal
-                        Berita</span>
+                    <img src="/images/logo2.png" class="h-8" alt="Portal Berita Logo">
+                    <span style="color:darkblue"class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">INFO BNN KOTA KEDIRI</span>
                 </a>
                 <div class="flex items-center space-x-6 rtl:space-x-reverse">
                     <a href="{{ route('semua-berita') }}" type="button"
-                        class="text-black hover:text-gray-700 border border-black hover:border-gray-700 hover:bg-slate-100 font-medium rounded-lg text-sm px-5 py-1 text-center me-2 mt-1">Cari
-                        Berita</a>
+                        class="text-black hover:text-gray-700 border border-black hover:border-gray-700 hover:bg-slate-100 font-medium rounded-lg text-sm px-5 py-1 text-center me-2 mt-1">Cari Berita</a>
                     @auth
                         <form action="{{ route('logout') }}">
                             @csrf

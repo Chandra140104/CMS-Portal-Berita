@@ -32,7 +32,7 @@
             <div class="flex flex-wrap justify-between items-center mx-auto max-w-screen-xl p-4">
                 <a href="{{ route('welcome') }}" class="flex items-center space-x-3 rtl:space-x-reverse">
                     <img src="/images/logo2.png" class="h-8" alt="Portal Berita Logo">
-                    <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">INFO BNN KOTA KEDIRI</span>
+                    <span style="color:darkblue"class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">INFO BNN KOTA KEDIRI</span>
                 </a>
                 <div class="flex items-center space-x-6 rtl:space-x-reverse">
                     <a href="{{ route('semua-berita') }}" type="button"

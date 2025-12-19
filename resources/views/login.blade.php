@@ -104,12 +104,12 @@
                 class="w-full btn-neon text-white font-bold rounded-lg text-lg px-5 py-3 text-center">
                 Login
             </button>
-            <div class="flex justify-between text-sm font-medium text-gray-300">
-                <a href="{{ route('welcome') }}" class="link-neon hover:underline">Kembali</a>
-                <div>
+            <div class="flex justify-center text-sm font-medium text-gray-300">
+                <a href="{{ route('welcome') }}" class="link-neon hover:underline">Kembali ke Beranda</a>
+                {{-- <div>
                     Buat akun? <a href="{{ route('registrasi') }}"
                         class="text-cyan-400 link-neon hover:underline">Klik di sini</a>
-                </div>
+                </div> --}}
             </div>
         </form>
     </div>

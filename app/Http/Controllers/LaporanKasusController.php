@@ -5,21 +5,16 @@ namespace App\Http\Controllers;
 use App\Models\LaporanKasus;
 use App\Services\TelegramService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class LaporanKasusController extends Controller
 {
-    /**
-     * Tampilkan form laporan.
-     */
     public function create()
     {
         return view('laporan-kasus.create');
     }
 
-    /**
-     * Simpan laporan ke database + upload file (opsional),
-     * lalu kirim notifikasi ke Telegram admin.
-     */
     public function store(Request $request, TelegramService $telegram)
     {
         $validated = $request->validate([
@@ -34,9 +29,8 @@ class LaporanKasusController extends Controller
             'terlapor_telepon' => ['nullable', 'string', 'max:20'],
             'terlapor_alamat'  => ['required', 'string', 'max:255'],
 
-            // Foto (opsional) - 1 file saja tiap jenis
-            'foto_lokasi'     => ['nullable', 'file', 'mimes:jpg,jpeg,png,webp', 'max:4096'],
-            'foto_kendaraan'  => ['nullable', 'file', 'mimes:jpg,jpeg,png,webp', 'max:4096'],
+            // Foto
+            'foto_lokasi' => ['nullable', 'file', 'mimes:jpg,jpeg,png,webp', 'max:4096'],
 
             // Narkoba
             'jenis_narkoba'         => ['required', 'in:Sabu,Ganja,Ekstasi,Heroin,Obat-obatan,Lainnya'],
@@ -53,9 +47,6 @@ class LaporanKasusController extends Controller
             'terlapor_profesi' => ['required', 'string', 'max:255'],
             'kantor_alamat'    => ['nullable', 'string', 'max:255'],
 
-            // Kendaraan
-            'kendaraan_info_plat' => ['required', 'string', 'max:255'],
-
             // Uraian
             'uraian_transaksi'       => ['required', 'string'],
             'lokasi_transaksi'       => ['required', 'string'],
@@ -63,36 +54,47 @@ class LaporanKasusController extends Controller
             'sumber_informasi'       => ['required', 'string'],
         ]);
 
-        // Jika pilih "Lainnya" tapi tidak isi keterangannya
+        // Validasi tambahan untuk opsi "Lainnya"
         if ($validated['jenis_narkoba'] === 'Lainnya' && empty($validated['jenis_narkoba_lainnya'])) {
-            return back()->withErrors([
-                'jenis_narkoba_lainnya' => 'Wajib diisi jika memilih "Lainnya".'
-            ])->withInput();
+            return back()->withErrors(['jenis_narkoba_lainnya' => 'Wajib diisi jika memilih "Lainnya".'])->withInput();
         }
-
         if ($validated['peran_terlapor'] === 'Lainnya' && empty($validated['peran_terlapor_lainnya'])) {
-            return back()->withErrors([
-                'peran_terlapor_lainnya' => 'Wajib diisi jika memilih "Lainnya".'
-            ])->withInput();
+            return back()->withErrors(['peran_terlapor_lainnya' => 'Wajib diisi jika memilih "Lainnya".'])->withInput();
         }
 
-        // Upload file (opsional)
+        // ===== UPLOAD FOTO (SEBELUM TRANSAKSI) =====
         $fotoLokasiPath = null;
         if ($request->hasFile('foto_lokasi')) {
-            $fotoLokasiPath = $request->file('foto_lokasi')->store('laporan-kasus/foto-lokasi', 'public');
+            // simpan ke storage/app/public/laporan-kasus
+            $fotoLokasiPath = $request->file('foto_lokasi')->store('laporan-kasus', 'public');
         }
 
-        $fotoKendaraanPath = null;
-        if ($request->hasFile('foto_kendaraan')) {
-            $fotoKendaraanPath = $request->file('foto_kendaraan')->store('laporan-kasus/foto-kendaraan', 'public');
-        }
+        $nomorLaporan = null;
+        $laporan = null;
 
-        // Simpan ke DB
-        $laporan = LaporanKasus::create([
-            ...$validated,
-            'foto_lokasi_path'    => $fotoLokasiPath,
-            'foto_kendaraan_path' => $fotoKendaraanPath,
-        ]);
+        // ===== GENERATE NOMOR LAPORAN + SIMPAN DB =====
+        DB::transaction(function () use (&$nomorLaporan, $validated, $fotoLokasiPath, &$laporan) {
+            $bulanRomawi = [1=>'I',2=>'II',3=>'III',4=>'IV',5=>'V',6=>'VI',7=>'VII',8=>'VIII',9=>'IX',10=>'X',11=>'XI',12=>'XII'];
+            $bulan = (int) now()->format('n');
+            $tahun = (int) now()->format('Y');
+
+            // lock agar urutan aman dari tabrakan
+            $countBulanIni = LaporanKasus::whereYear('created_at', $tahun)
+                ->whereMonth('created_at', $bulan)
+                ->lockForUpdate()
+                ->count();
+
+            $urut  = $countBulanIni + 1;
+            $urut2 = str_pad((string) $urut, 2, '0', STR_PAD_LEFT);
+
+            $nomorLaporan = "LP/A/{$urut2}/{$bulanRomawi[$bulan]}/{$tahun}/PEMBERANTASAN/BNNK KOTA KEDIRI/BNNP JAWA TIMUR";
+
+            $laporan = LaporanKasus::create([
+                ...$validated,
+                'nomor_laporan'    => $nomorLaporan,
+                'foto_lokasi_path' => $fotoLokasiPath,
+            ]);
+        });
 
         // ===== KIRIM TELEGRAM =====
         try {
@@ -105,6 +107,9 @@ class LaporanKasusController extends Controller
                 : "";
 
             $msg = "<b>📩 Laporan Kasus Baru Masuk</b>\n"
+                . "━━━━━━━━━━━━━━━━━━\n"
+                . "<b>No. Laporan:</b> {$laporan->nomor_laporan}\n"
+                . "<b>Tanggal:</b> " . now()->format('d-m-Y H:i') . " WIB\n"
                 . "━━━━━━━━━━━━━━━━━━\n"
                 . "<b>Pelapor:</b> {$laporan->pelapor_nama}\n"
                 . "<b>Telepon:</b> {$laporan->pelapor_telepon}\n"
@@ -127,8 +132,16 @@ class LaporanKasusController extends Controller
                 . "<b>Cara Pengedaran/Transaksi:</b>\n{$laporan->uraian_transaksi}\n";
 
             $telegram->sendMessage($msg);
+
+            // kirim foto lokasi kalau ada (SETELAH $laporan ADA)
+            if (!empty($laporan->foto_lokasi_path)) {
+                $abs = storage_path('app/public/' . $laporan->foto_lokasi_path);
+                if (file_exists($abs)) {
+                    $telegram->sendPhoto($abs, "<b>📍 Foto Lokasi {$laporan->nomor_laporan}</b>");
+                }
+            }
         } catch (\Throwable $e) {
-            \Log::error('Telegram gagal: '.$e->getMessage());
+            Log::error('Telegram gagal: ' . $e->getMessage());
         }
 
         return redirect()

@@ -10,6 +10,7 @@ use App\Http\Controllers\PortalBeritaController;
 use App\Http\Controllers\RegistrasiController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\LaporanKasusController;
+use App\Http\Controllers\LaporanKasusAdminController;
 
 /*
 |--------------------------------------------------------------------------
@@ -55,7 +56,6 @@ Route::controller(PortalBeritaController::class)->group(function () {
 | LAPORAN KASUS NARKOBA (PUBLIK)
 |--------------------------------------------------------------------------
 | Bisa diakses TANPA LOGIN
-| URL: http://127.0.0.1:8000/laporan-kasus
 */
 Route::get('/laporan-kasus', [LaporanKasusController::class, 'create'])
     ->name('laporan-kasus.create');
@@ -65,10 +65,10 @@ Route::post('/laporan-kasus', [LaporanKasusController::class, 'store'])
 
 /*
 |--------------------------------------------------------------------------
-| ADMIN PANEL
+| ADMIN PANEL (ADMIN + EDITOR)
 |--------------------------------------------------------------------------
 | Prefix: /admin
-| Middleware: auth + hakakses
+| Middleware: auth + hakakses:admin,editor
 */
 Route::prefix('admin')
     ->middleware(['auth', 'hakakses:admin,editor'])
@@ -112,6 +112,20 @@ Route::prefix('admin')
             Route::get('/edit/{id}', 'edit')->name('edit-pengguna');
             Route::put('/edit/{id}', 'update')->name('proses-edit-pengguna');
             Route::get('/{id}', 'destroy')->name('hapus-pengguna');
+        });
+
+        /*
+        |--------------------------------------------------------------------------
+        | LAPORAN KASUS (ADMIN ONLY)
+        |--------------------------------------------------------------------------
+        | IMPORTANT: ini ditaruh di dalam group /admin tapi ditambah middleware admin saja
+        */
+        Route::middleware('hakakses:admin')->prefix('laporan-kasus')->group(function () {
+            Route::get('/', [LaporanKasusAdminController::class, 'index'])
+                ->name('admin.laporan-kasus.index');
+
+            Route::get('/{laporan}', [LaporanKasusAdminController::class, 'show'])
+                ->name('admin.laporan-kasus.show');
         });
 
     });

@@ -87,7 +87,15 @@
                 <div class="flex items-center space-x-6 rtl:space-x-reverse">
                     <a href="{{ route('semua-berita') }}" type="button"
                         class="pulse-button text-black hover:text-gray-700 border border-black hover:border-gray-700 hover:bg-slate-100 focus:ring-4 focus:outline-none focus:ring-black font-medium rounded-lg text-sm px-5 py-1 text-center me-2 mt-1 transition-all duration-300 hover:scale-110 hover:shadow-lg">
-                        Cari tokoh, topik atau peristiwa
+                        Cari Berita
+                    </a>
+                    <!-- BUTTON LAPOR PENYALAHGUNAAN -->
+                    <a href="{{ route('laporan-kasus.create') }}"
+                    class="pulse-button bg-red-600 text-white
+                            hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300
+                            font-semibold rounded-lg text-sm px-5 py-1 text-center
+                            transition-all duration-300 hover:scale-110 hover:shadow-lg">
+                        🚨 Lapor Penyalahgunaan
                     </a>
                     @auth
                         <form action="{{ route('logout') }}">
@@ -284,10 +292,87 @@
         </a>
     </div>
 </section>
-    <!-- FOOTER -->
-    <div class="block text-sm text-gray-500 sm:text-center dark:text-gray-400 mb-10 mt-20 animate-fadeIn">
-        <span>© 2024 - Info BNN Kota Kediri</span>
+<!-- FOOTER -->
+<footer class="mt-6 bg-white/95 backdrop-blur">
+    <div class="max-w-screen-xl mx-auto px-8 py-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
+
+            <!-- KIRI: SOSIAL MEDIA -->
+            <div class="text-center md:text-left md:pl-16">
+                <h2 class="text-lg font-bold text-gray-900 mb-4">
+                    Ikuti kami
+                </h2>
+
+                <ul class="space-y-3 text-gray-700">
+
+                    <li class="flex justify-center md:justify-start">
+                        <a href="https://www.instagram.com/infobnn_kotakediri/"
+                           target="_blank"
+                           rel="noopener noreferrer"
+                           class="flex gap-3 hover:text-blue-700 transition-colors duration-300">
+                            <span class="font-semibold">Instagram</span>
+                            <span class="text-gray-500 hover:text-blue-600">
+                                @infobnn_kotakediri
+                            </span>
+                        </a>
+                    </li>
+
+                    <li class="flex justify-center md:justify-start">
+                        <a href="https://www.tiktok.com/@infobnn_kotakediri"
+                           target="_blank"
+                           rel="noopener noreferrer"
+                           class="flex gap-3 hover:text-blue-700 transition-colors duration-300">
+                            <span class="font-semibold">TikTok</span>
+                            <span class="text-gray-500 hover:text-blue-600">
+                                @infobnn_kotakediri
+                            </span>
+                        </a>
+                    </li>
+
+                    <li class="flex justify-center md:justify-start">
+                        <a href="https://www.youtube.com/@humasbnnkotakediri7036"
+                           target="_blank"
+                           rel="noopener noreferrer"
+                           class="flex gap-3 hover:text-blue-700 transition-colors duration-300">
+                            <span class="font-semibold">YouTube</span>
+                            <span class="text-gray-500 hover:text-blue-600">
+                                Humas BNN Kota Kediri
+                            </span>
+                        </a>
+                    </li>
+
+                    <li class="flex justify-center md:justify-start">
+                        <a href="https://x.com/bnn_kotakediri"
+                           target="_blank"
+                           rel="noopener noreferrer"
+                           class="flex gap-3 hover:text-blue-700 transition-colors duration-300">
+                            <span class="font-semibold">X</span>
+                            <span class="text-gray-500 hover:text-blue-600">
+                                @bnn_kotakediri
+                            </span>
+                        </a>
+                    </li>
+
+                </ul>
+
+                <div class="mt-6 text-sm text-gray-500 text-center md:text-left">
+                    © 2025 - Info BNN Kota Kediri
+                </div>
+            </div>
+
+            <!-- KANAN: LOGO -->
+            <div class="flex justify-center md:justify-end">
+                <img
+                    src="{{ asset('images/logo2.png') }}"
+                    alt="Logo BNN Kota Kediri"
+                    class="w-72 md:w-80 h-auto">
+            </div>
+
+        </div>
     </div>
+</footer>
+
+
 
     <script src="https://cdn.jsdelivr.net/npm/flowbite@2.4.1/dist/flowbite.min.js"></script>
 </body>

@@ -21,6 +21,7 @@
             <img src="{{ asset('images/logo2.png') }}" class="w-10 h-10" alt="Logo">
             <div>
                 <h1 class="text-2xl font-bold">Form Lapor Kasus Narkoba</h1>
+                <p class="text-sm text-gray-500">BNN KOTA KEDIRI - JAWA TIMUR</p>
                 <p class="text-sm text-gray-500">Isi data dengan benar. Identitas pelapor akan dijaga.</p>
             </div>
         </div>
@@ -105,7 +106,7 @@
                                placeholder="Nama terlapor" required>
                         @error('terlapor_nama') <p class="text-xs text-red-600 mt-1">{{ $message }}</p> @enderror
                     </div>
-                    
+
                     <div class="md:col-span-2">
                         <label class="block text-sm font-medium mb-1">Alamat Terlapor <span class="text-red-600">*</span></label>
                         <input type="text" name="terlapor_alamat" value="{{ old('terlapor_alamat') }}"
@@ -232,13 +233,6 @@
             <div>
                 <h2 class="text-lg font-semibold mb-4">Informasi Kendaraan</h2>
 
-                <div>
-                    <label class="block text-sm font-medium mb-1">Jenis Kendaraan & Nomor Plat <span class="text-red-600">*</span></label>
-                    <input type="text" name="kendaraan_info_plat" value="{{ old('kendaraan_info_plat') }}"
-                           class="w-full rounded-lg border-gray-300 focus:ring-blue-500 focus:border-blue-500"
-                           placeholder="Contoh: Motor Vario hitam N 1234 AB" required>
-                    @error('kendaraan_info_plat') <p class="text-xs text-red-600 mt-1">{{ $message }}</p> @enderror
-                </div>
             </div>
 
             <hr>
@@ -293,10 +287,11 @@
                     Kembali ke Beranda
                 </a>
 
-                <button type="submit"
-                        class="inline-flex justify-center rounded-lg bg-blue-700 px-6 py-2.5 text-sm font-semibold text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300">
-                    Kirim Laporan
-                </button>
+                <button id="btn-submit" type="submit"
+                    class="inline-flex justify-center rounded-lg bg-blue-700 px-6 py-2.5 text-sm font-semibold text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300">
+                Kirim Laporan
+            </button>
+
             </div>
         </form>
 
@@ -337,5 +332,65 @@
         jenisSelect.addEventListener('change', toggleJenis);
         peranSelect.addEventListener('change', togglePeran);
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+    // ====== SWEETALERT KONFIRMASI SUBMIT ======
+    const form = document.querySelector('form[action="{{ route('laporan-kasus.store') }}"]');
+    const btnSubmit = document.getElementById('btn-submit');
+
+    if (form && btnSubmit) {
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            Swal.fire({
+                title: 'Yakin ingin mengirim laporan?',
+                html: `
+                    <div style="text-align:left;font-size:14px;line-height:1.5">
+                        Pastikan data yang Anda isi sudah benar.<br>
+                        <b>Identitas pelapor akan dijaga kerahasiaannya.</b>
+                    </div>
+                `,
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Ya, Kirim',
+                cancelButtonText: 'Batal',
+                confirmButtonColor: '#1d4ed8',
+                cancelButtonColor: '#6b7280',
+                reverseButtons: true,
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // optional: tampilkan loading
+                    Swal.fire({
+                        title: 'Mengirim...',
+                        text: 'Mohon tunggu sebentar.',
+                        allowOutsideClick: false,
+                        allowEscapeKey: false,
+                        didOpen: () => Swal.showLoading()
+                    });
+
+                    form.submit();
+                }
+            });
+        });
+    }
+
+    // ====== SWEETALERT SUKSES (SETELAH REDIRECT) ======
+    @if (session('success'))
+        Swal.fire({
+            title: 'Laporan berhasil dikirim',
+            html: `
+                <div style="font-size:14px;line-height:1.6">
+                    {{ session('success') }}<br><br>
+                    <b>Catatan:</b> Pihak <b>BNN Kota Kediri</b> akan segera menindak lanjuti laporan Anda.
+                </div>
+            `,
+            icon: 'success',
+            confirmButtonText: 'OK',
+            confirmButtonColor: '#16a34a'
+        });
+    @endif
+</script>
+
+
 </body>
 </html>

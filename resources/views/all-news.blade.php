@@ -136,7 +136,7 @@
 
     <!-- FOOTER -->
     <div class="block text-sm text-gray-500 sm:text-center dark:text-gray-400 mb-10 mt-20">
-    <span>© 2024 - Info BNN Kota Kediri</span>
+    <span>© 2025 - Info BNN Kota Kediri</span>
     </div>
     <!-- END OF FOOTER -->
 

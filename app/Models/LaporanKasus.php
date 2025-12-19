@@ -9,6 +9,8 @@ class LaporanKasus extends Model
     protected $table = 'laporan_kasus';
 
     protected $fillable = [
+        'nomor_laporan',
+
         'pelapor_nama',
         'pelapor_email',
         'pelapor_telepon',
@@ -20,9 +22,9 @@ class LaporanKasus extends Model
 
         'foto_lokasi_path',
 
+
         'jenis_narkoba',
         'jenis_narkoba_lainnya',
-
         'jumlah_narkoba',
 
         'peran_terlapor',

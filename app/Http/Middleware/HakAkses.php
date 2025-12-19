@@ -8,16 +8,19 @@ use Symfony\Component\HttpFoundation\Response;
 
 class HakAkses
 {
-    /**
-     * Handle an incoming request.
-     *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
-     */
     public function handle(Request $request, Closure $next, ...$roles): Response
     {
-        if (in_array($request->user()->role, $roles)) {
+        // Kalau belum login, biarkan middleware auth yang handle
+        if (!$request->user()) {
+            return redirect()->route('login');
+        }
+
+        // Jika role user ada di daftar roles yang diizinkan
+        if (in_array($request->user()->role, $roles, true)) {
             return $next($request);
         }
-        return redirect()->back();
+
+        // Kalau tidak punya akses
+        abort(403, 'Anda tidak memiliki akses.');
     }
 }

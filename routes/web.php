@@ -11,6 +11,7 @@ use App\Http\Controllers\RegistrasiController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\LaporanKasusController;
 use App\Http\Controllers\LaporanKasusAdminController;
+use App\Http\Controllers\BeritaCommentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -50,6 +51,14 @@ Route::controller(PortalBeritaController::class)->group(function () {
     Route::get('/berita/{slug}', 'show')->name('satu-berita');
     Route::get('/kategori/{id}', 'newsPerCategory')->name('berita-per-kategori');
 });
+
+/*
+|--------------------------------------------------------------------------
+| KOMENTAR BERITA (PUBLIK)
+|--------------------------------------------------------------------------
+*/
+Route::post('/berita/{slug}/komentar', [BeritaCommentController::class, 'store'])
+    ->name('berita.komentar.store');
 
 /*
 |--------------------------------------------------------------------------
@@ -118,11 +127,15 @@ Route::prefix('admin')
         |--------------------------------------------------------------------------
         | LAPORAN KASUS (ADMIN ONLY)
         |--------------------------------------------------------------------------
-        | IMPORTANT: ini ditaruh di dalam group /admin tapi ditambah middleware admin saja
         */
         Route::middleware('hakakses:admin')->prefix('laporan-kasus')->group(function () {
+
             Route::get('/', [LaporanKasusAdminController::class, 'index'])
                 ->name('admin.laporan-kasus.index');
+
+            // ✅ EXPORT EXCEL
+            Route::get('/export', [LaporanKasusAdminController::class, 'exportExcel'])
+                ->name('admin.laporan-kasus.export');
 
             Route::get('/{laporan}', [LaporanKasusAdminController::class, 'show'])
                 ->name('admin.laporan-kasus.show');

@@ -17,6 +17,18 @@ class Berita extends Model
         return $this->belongsTo(Kategori::class);
     }
 
+    // ===============================
+    // RELASI KOMENTAR (FLAT - TANPA parent_id)
+    // ===============================
+    public function comments()
+    {
+        return $this->hasMany(\App\Models\BeritaComment::class, 'berita_id')
+            ->latest();
+    }
+
+    // ===============================
+    // SLUGGABLE
+    // ===============================
     public function sluggable(): array
     {
         return [

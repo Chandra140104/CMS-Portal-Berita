@@ -19,12 +19,31 @@
         * {
             font-family: 'Poppins', sans-serif;
         }
+
+        /* ===============================
+           HALAMAN DETAIL BERITA - GRID ABU
+           =============================== */
+        .page-grid {
+            background-color: #ffffff;
+            background-image:
+                linear-gradient(rgba(0, 0, 0, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 0, 0, 0.05) 1px, transparent 1px);
+            background-size: 32px 32px;
+        }
+
+        /* Card komentar biar lebih lembut */
+        .comment-card {
+            background: rgba(255, 255, 255, 0.96);
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            border-radius: 14px;
+        }
     </style>
 
     @vite('resources/css/app.css')
 </head>
 
-<body>
+<body class="page-grid">
+
 
     <!-- NAV BAR -->
     <div class="sticky top-0 z-50">
@@ -32,7 +51,7 @@
             <div class="flex flex-wrap justify-between items-center mx-auto max-w-screen-xl p-4">
                 <a href="{{ route('welcome') }}" class="flex items-center space-x-3 rtl:space-x-reverse">
                     <img src="/images/logo2.png" class="h-8" alt="Portal Berita Logo">
-                    <span style="color:darkblue"class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">INFO BNN KOTA KEDIRI</span>
+                    <span style="color:darkblue" class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">INFO BNN KOTA KEDIRI</span>
                 </a>
                 <div class="flex items-center space-x-6 rtl:space-x-reverse">
                     <a href="{{ route('semua-berita') }}" type="button"
@@ -107,21 +126,86 @@
                     -
                     {{ date('j F Y, H:i', strtotime($beritas->created_at)) }} WIB
                 </h3>
+
                 @if ($beritas->thumbnail)
                     <img src="{{ asset('storage/' . $beritas->thumbnail) }}" alt="{{ $beritas->judul }}"
-                        class="mx-auto object-cover w-2/4">
+                        class="mx-auto object-cover w-2/4 rounded-lg shadow">
                 @else
-                    <img src="/images/banner.jpg" alt="{{ $beritas->judul }}" class="mx-auto object-cover w-2/4">
+                    <img src="/images/banner.jpg" alt="{{ $beritas->judul }}"
+                        class="mx-auto object-cover w-2/4 rounded-lg shadow">
                 @endif
 
                 <p class="font-normal text-justify text-md mt-10 whitespace-pre-wrap">{{ $beritas->deskripsi }}</p>
+
+                <!-- ===============================
+                     KOMENTAR (FORM SAJA)
+                     =============================== -->
+                <div class="mt-14">
+                    <h2 class="text-2xl font-bold mb-4">Komentar</h2>
+
+                    @if (session('success'))
+                        <div class="mb-4 p-3 rounded-lg bg-green-100 text-green-800 border border-green-200">
+                            {{ session('success') }}
+                        </div>
+                    @endif
+
+                    @if ($errors->any())
+                        <div class="mb-4 p-3 rounded-lg bg-red-100 text-red-800 border border-red-200">
+                            <ul class="list-disc list-inside">
+                                @foreach ($errors->all() as $err)
+                                    <li>{{ $err }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+
+                    <!-- FORM KOMENTAR (Nama + Email WAJIB) -->
+                    <form action="{{ route('berita.komentar.store', $beritas->slug) }}" method="POST"
+                        class="comment-card p-5 shadow-sm">
+                        @csrf
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-sm font-semibold mb-1">Nama</label>
+                                <input type="text" name="guest_name" value="{{ old('guest_name') }}" required
+                                    class="w-full p-2.5 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
+                                    placeholder="Nama Anda">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold mb-1">Email</label>
+                                <input type="email" name="guest_email" value="{{ old('guest_email') }}" required
+                                    class="w-full p-2.5 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
+                                    placeholder="nama@email.com">
+                            </div>
+                        </div>
+
+                        <div class="mt-3">
+                            <label class="block text-sm font-semibold mb-1">Komentar</label>
+                            <textarea name="content" rows="4" required
+                                class="w-full p-2.5 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
+                                placeholder="Tulis komentar...">{{ old('content') }}</textarea>
+                        </div>
+
+                        <div class="mt-4 flex items-center justify-between">
+                            <p class="text-xs text-gray-500">
+                                Dengan mengirim komentar, Anda menyetujui untuk tidak menulis konten yang melanggar norma.
+                            </p>
+                            <button type="submit"
+                                class="px-5 py-2.5 rounded-lg bg-blue-700 text-white font-semibold hover:bg-blue-800 transition">
+                                Kirim
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                <!-- END KOMENTAR -->
+
             </div>
         </div>
     </div>
 
     <!-- FOOTER -->
     <div class="block text-sm text-gray-500 sm:text-center dark:text-gray-400 mb-10 mt-20">
-    <span>© 2025 - Info BNN Kota Kediri</span>
+        <span>© 2025 - Info BNN Kota Kediri</span>
     </div>
     <!-- END OF FOOTER -->
 

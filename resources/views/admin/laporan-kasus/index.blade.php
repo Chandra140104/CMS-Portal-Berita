@@ -2,17 +2,25 @@
 @section('content')
 
 <div class="p-6">
-    <div class="flex items-center justify-between mb-4">
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-4">
         <h1 class="text-2xl font-bold text-gray-900">Laporan Kasus</h1>
 
-        <form method="GET" class="flex gap-2">
-            <input type="text" name="q" value="{{ $q }}"
-                   class="rounded-lg border-gray-300 focus:ring-blue-500 focus:border-blue-500"
-                   placeholder="Cari nomor/pelapor/terlapor/jenis...">
-            <button class="rounded-lg bg-blue-700 px-4 py-2 text-white font-semibold hover:bg-blue-800">
-                Cari
-            </button>
-        </form>
+        <div class="flex flex-wrap gap-2">
+            <form method="GET" class="flex gap-2">
+                <input type="text" name="q" value="{{ $q }}"
+                       class="rounded-lg border-gray-300 focus:ring-blue-500 focus:border-blue-500"
+                       placeholder="Cari nomor/pelapor/terlapor/jenis...">
+                <button class="rounded-lg bg-blue-700 px-4 py-2 text-white font-semibold hover:bg-blue-800">
+                    Cari
+                </button>
+            </form>
+
+            <!-- ✅ EXPORT EXCEL (ikutkan filter q) -->
+            <a href="{{ route('admin.laporan-kasus.export', ['q' => $q]) }}"
+               class="inline-flex items-center rounded-lg bg-green-700 px-4 py-2 text-white font-semibold hover:bg-green-800">
+                Export Excel
+            </a>
+        </div>
     </div>
 
     <div class="bg-white border border-gray-200 rounded-xl shadow-sm overflow-x-auto">

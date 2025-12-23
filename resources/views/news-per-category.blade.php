@@ -19,12 +19,38 @@
         * {
             font-family: 'Poppins', sans-serif;
         }
+        /* ===============================
+   BACKGROUND BIRU TUA + GRID
+   =============================== */
+.bg-tech {
+    min-height: 100vh;
+    background-color: #0a1f44;
+    background-image:
+        linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+        radial-gradient(circle at top, rgba(59, 130, 246, 0.25), transparent 60%);
+    background-size: 40px 40px, 40px 40px, 100% 100%;
+    background-attachment: fixed;
+}
+
+/* ===============================
+   CARD PUTIH DENGAN GRID ABU
+   =============================== */
+.card-grid {
+    background-color: #ffffff;
+    background-image:
+        linear-gradient(rgba(0, 0, 0, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 0, 0, 0.05) 1px, transparent 1px);
+    background-size: 28px 28px;
+}
+
     </style>
 
     @vite('resources/css/app.css')
 </head>
 
-<section style="background-color:darkblue">
+<section class="bg-tech">
+
 <body>
 
     <!-- NAV BAR -->
@@ -104,8 +130,9 @@
         </div>
         <div class="flex flex-wrap w-screen gap-2">
             @foreach ($beritas as $item)
-                <div
-                    class="w-64 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+            <div class="w-64 bg-white card-grid border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+
+                
                     <a href="{{ route('satu-berita', $item->slug) }}">
                         @if ($item->thumbnail)
                             <img class="rounded-t-lg" src="{{ asset('storage/' . $item->thumbnail) }}"

@@ -20,6 +20,19 @@
             font-family: 'Poppins', sans-serif;
         }
 
+        /* ===============================
+           BACKGROUND DARK BLUE GRID
+           =============================== */
+        .bg-tech {
+            background-color: #0a1f44;
+            background-image:
+                linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+                radial-gradient(circle at top, rgba(59, 130, 246, 0.25), transparent 60%);
+            background-size: 40px 40px, 40px 40px, 100% 100%;
+            background-attachment: fixed;
+        }
+
         /* Animasi masuk halaman */
         @keyframes fadeInUp {
             from { opacity: 0; transform: translateY(30px); }
@@ -68,13 +81,68 @@
             0%, 100% { transform: scale(1); }
             50% { transform: scale(1.06); }
         }
+        /* ===============================
+   CARD PUTIH DENGAN GARIS GRID
+   =============================== */
+.card-grid {
+    background-color: #ffffff;
+    background-image:
+        linear-gradient(rgba(0, 0, 0, 0.06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 0, 0, 0.06) 1px, transparent 1px);
+    background-size: 28px 28px;
+}
+/* ===============================
+   FOOTER GRID ABU-ABU
+   =============================== */
+.footer-grid {
+    background-color: rgba(255, 255, 255, 0.95);
+    background-image:
+        linear-gradient(rgba(0, 0, 0, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 0, 0, 0.05) 1px, transparent 1px);
+    background-size: 32px 32px;
+}
+/* ===============================
+   FOOTER DOT PATTERN
+   =============================== */
+
+
+
     </style>
 
     @vite('resources/css/app.css')
 </head>
-<section style="background:darkblue">
-<body>
 
+<section class="bg-tech">
+<body>
+<!-- HERO BANNER -->
+<div class="w-full">
+    <div class="relative w-full h-[260px] md:h-[420px] overflow-hidden">
+        <!-- Gambar Banner -->
+        <img
+            src="/images/banner-hero.jpg"
+            alt="Banner BNN Kota Kediri"
+            class="absolute inset-0 w-full h-full object-cover"
+        />
+
+        <!-- Overlay biar teks kebaca -->
+        <div class="absolute inset-0 bg-black/25"></div>
+
+        <!-- Konten banner (opsional) -->
+        <div class="absolute inset-0 flex items-end">
+            <div class="w-full max-w-screen-xl mx-auto px-6 md:px-10 pb-6 md:pb-10">
+                <div class="inline-block bg-white/90 backdrop-blur px-4 py-2 md:px-6 md:py-3 rounded-lg shadow">
+                    <div class="text-xs md:text-sm font-semibold text-gray-700">
+                        Badan Narkotika Nasional Kota Kediri
+                    </div>
+                    <div class="text-lg md:text-2xl font-extrabold text-gray-900 leading-snug">
+                        Bersama Wujudkan Indonesia Bersinar, Bersih Narkoba
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- END HERO BANNER -->
 
     <!-- NAV BAR -->
     <div class="sticky top-0 z-50 shadow-md transition-shadow duration-300">
@@ -189,7 +257,7 @@
             <button type="button" class="absolute top-0 end-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none transition-transform duration-300 hover:scale-110" data-carousel-next>
                 <span class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-white/30 dark:bg-gray-800/30 group-hover:bg-white/50 dark:group-hover:bg-gray-800/60 group-focus:ring-4 group-focus:ring-white dark:group-focus:ring-gray-800/70 group-focus:outline-none">
                     <svg class="w-4 h-4 text-white dark:text-gray-800 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
-                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4" />
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 1 1 5l4 4" />
                     </svg>
                     <span class="sr-only">Next</span>
                 </span>
@@ -220,7 +288,8 @@
     <!-- BERITA UTAMA -->
     <div class="container w-5/6 flex mx-auto py-0.5 gap-x-2 animate-fadeInUp">
         @foreach ($headline as $item)
-            <div class="w-64 news-card bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+            <div class="w-64 news-card bg-white card-grid border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+
                 <a href="{{ route('satu-berita', $item->slug) }}">
                     @if ($item->thumbnail)
                         <img class="rounded-t-lg" src="{{ asset('storage/' . $item->thumbnail) }}" alt="{{ $item->judul }}" />
@@ -254,7 +323,8 @@
     <div class="container flex w-5/6 mx-auto">
         <div class="flex flex-wrap w-screen gap-2">
             @foreach ($hariIni as $item)
-                <div class="w-64 news-card bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+                <div class="w-64 news-card bg-white card-grid border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+
                     <a href="{{ route('satu-berita', $item->slug) }}">
                         @if ($item->thumbnail)
                             <img class="rounded-t-lg" src="{{ asset('storage/' . $item->thumbnail) }}" alt="{{ $item->judul }}" />
@@ -292,8 +362,12 @@
         </a>
     </div>
 </section>
+
 <!-- FOOTER -->
-<footer class="mt-6 bg-white/95 backdrop-blur">
+<footer class="mt-6 bg-white/95 backdrop-blur footer-grid">
+
+
+
     <div class="max-w-screen-xl mx-auto px-8 py-8">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
 
@@ -371,8 +445,6 @@
         </div>
     </div>
 </footer>
-
-
 
     <script src="https://cdn.jsdelivr.net/npm/flowbite@2.4.1/dist/flowbite.min.js"></script>
 </body>

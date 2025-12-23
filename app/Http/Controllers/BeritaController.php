@@ -13,29 +13,41 @@ class BeritaController extends Controller
 {
     public function index(Request $request)
     {
+        // ✅ untuk dropdown filter kategori
+        $kategoris = Kategori::orderBy('nama_kategori')->get();
+
         $beritas = Berita::query()
             ->with('kategori')
             ->orderBy('created_at', 'desc')
+
+            // ✅ FILTER KATEGORI
+            ->when($request->filled('kategori'), function ($query) use ($request) {
+                $query->where('kategori_id', $request->kategori);
+            })
+
+            // ✅ SEARCH (judul / slug) - grouping supaya orWhere tidak bocor
             ->when($request->filled('search'), function ($query) use ($request) {
                 $s = $request->search;
 
-                // grouping supaya where + orWhere tidak bocor ke kondisi lain
                 $query->where(function ($sub) use ($s) {
                     $sub->where('judul', 'LIKE', '%' . $s . '%')
                         ->orWhere('slug', 'LIKE', '%' . $s . '%');
                 });
             })
+
             ->paginate(10)
             ->onEachSide(2);
 
+        // ✅ simpan url terakhir (tetap seperti sebelumnya)
         Session::put('halaman_url', request()->fullUrl());
 
-        return view('admin.berita.index', compact('beritas'));
+        // ✅ kirim $kategoris juga untuk view filter
+        return view('admin.berita.index', compact('beritas', 'kategoris'));
     }
 
     public function show($id)
     {
-        // ✅ tambahkan kategori + comments untuk ditampilkan di show.blade.php
+        // ✅ tetap: kategori + comments
         $beritas = Berita::query()
             ->with(['kategori', 'comments'])
             ->findOrFail($id);
@@ -61,7 +73,7 @@ class BeritaController extends Controller
             'status_publish' => ['required'],
         ]);
 
-        // Mengambil ekstensi asli dari thumbnail
+        // ✅ membuat nama file thumbnail seperti sebelumnya
         $extension = $request->file('thumbnail')->getClientOriginalExtension();
         $thumbnailName = str_replace(" ", "-", $request->slug . "_gambar-berita." . $extension);
 
@@ -106,6 +118,7 @@ class BeritaController extends Controller
         ]);
 
         $berita = Berita::findOrFail($id);
+
         $berita->judul          = $request->judul;
         $berita->slug           = $request->slug;
         $berita->deskripsi      = $request->deskripsi;
@@ -114,6 +127,15 @@ class BeritaController extends Controller
         $berita->status_publish = $request->status_publish;
 
         if ($request->hasFile('thumbnail')) {
+
+            // ✅ hapus file lama (biar storage tidak numpuk) - tambahan aman
+            if ($berita->thumbnail) {
+                $oldPath = storage_path('app/public/' . $berita->thumbnail);
+                if (file_exists($oldPath)) {
+                    unlink($oldPath);
+                }
+            }
+
             $thumbnailName = str_replace(
                 " ",
                 "-",

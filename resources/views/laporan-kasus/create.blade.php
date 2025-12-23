@@ -84,7 +84,7 @@
                         <label class="block text-sm font-medium mb-1">Alamat Pelapor <span class="text-red-600">*</span></label>
                         <input type="text" name="pelapor_alamat" value="{{ old('pelapor_alamat') }}"
                                class="w-full rounded-lg border-gray-300 focus:ring-blue-500 focus:border-blue-500"
-                               placeholder="Nama jalan/gedung/lokasi, desa/kelurahan, kecamatan, kota, provinsi, kode pos" required>
+                               placeholder="Alamat lengkap pelapor" required>
                         @error('pelapor_alamat') <p class="text-xs text-red-600 mt-1">{{ $message }}</p> @enderror
                     </div>
                 </div>
@@ -111,10 +111,52 @@
                         <label class="block text-sm font-medium mb-1">Alamat Terlapor <span class="text-red-600">*</span></label>
                         <input type="text" name="terlapor_alamat" value="{{ old('terlapor_alamat') }}"
                                class="w-full rounded-lg border-gray-300 focus:ring-blue-500 focus:border-blue-500"
-                               placeholder="Nama jalan/gedung/lokasi, desa/kelurahan, kecamatan, kota, provinsi, kode pos" required>
+                               placeholder="Alamat lengkap terlapor" required>
                         @error('terlapor_alamat') <p class="text-xs text-red-600 mt-1">{{ $message }}</p> @enderror
                     </div>
                 </div>
+            </div>
+
+            <hr>
+
+            {{-- ===================== --}}
+            {{-- LOKASI KEJADIAN (BARU) --}}
+            {{-- ===================== --}}
+            <div>
+                <h2 class="text-lg font-semibold mb-4">Lokasi Kejadian</h2>
+
+                @php
+                    $oldKec = old('kecamatan_kejadian');
+                    $oldKel = old('kelurahan_kejadian');
+                @endphp
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium mb-1">Kecamatan Kejadian <span class="text-red-600">*</span></label>
+                        <select name="kecamatan_kejadian" id="kecamatan_kejadian"
+                                class="w-full rounded-lg border-gray-300 focus:ring-blue-500 focus:border-blue-500" required>
+                            <option value="">-- Pilih Kecamatan --</option>
+                            @foreach (['Mojoroto','Kota','Pesantren'] as $kec)
+                                <option value="{{ $kec }}" {{ $oldKec === $kec ? 'selected' : '' }}>{{ $kec }}</option>
+                            @endforeach
+                        </select>
+                        @error('kecamatan_kejadian') <p class="text-xs text-red-600 mt-1">{{ $message }}</p> @enderror
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium mb-1">Kelurahan Kejadian <span class="text-red-600">*</span></label>
+                        <select name="kelurahan_kejadian" id="kelurahan_kejadian"
+                                class="w-full rounded-lg border-gray-300 focus:ring-blue-500 focus:border-blue-500" required>
+                            <option value="">-- Pilih Kelurahan --</option>
+                            {{-- option akan diisi via JS --}}
+                        </select>
+                        @error('kelurahan_kejadian') <p class="text-xs text-red-600 mt-1">{{ $message }}</p> @enderror
+                    </div>
+                </div>
+
+                <p class="text-xs text-gray-500 mt-2">
+                    Pilih kecamatan terlebih dahulu agar daftar kelurahan tampil sesuai wilayah.
+                </p>
             </div>
 
             <hr>
@@ -132,8 +174,6 @@
                                class="w-full rounded-lg border-gray-300 focus:ring-blue-500 focus:border-blue-500">
                         @error('foto_lokasi') <p class="text-xs text-red-600 mt-1">{{ $message }}</p> @enderror
                     </div>
-
-                    
                 </div>
             </div>
 
@@ -228,16 +268,6 @@
             <hr>
 
             {{-- ===================== --}}
-            {{-- KENDARAAN --}}
-            {{-- ===================== --}}
-            <div>
-                <h2 class="text-lg font-semibold mb-4">Informasi Kendaraan</h2>
-
-            </div>
-
-            <hr>
-
-            {{-- ===================== --}}
             {{-- URAIAN --}}
             {{-- ===================== --}}
             <div>
@@ -289,9 +319,8 @@
 
                 <button id="btn-submit" type="submit"
                     class="inline-flex justify-center rounded-lg bg-blue-700 px-6 py-2.5 text-sm font-semibold text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300">
-                Kirim Laporan
-            </button>
-
+                    Kirim Laporan
+                </button>
             </div>
         </form>
 
@@ -301,7 +330,7 @@
     </div>
 
     <script>
-        // Toggle input "Lainnya"
+        // ===== Toggle input "Lainnya" =====
         const jenisSelect = document.getElementById('jenis_narkoba');
         const jenisWrap = document.getElementById('jenis_narkoba_lainnya_wrap');
 
@@ -309,88 +338,117 @@
         const peranWrap = document.getElementById('peran_terlapor_lainnya_wrap');
 
         function toggleJenis() {
-            if (jenisSelect.value === 'Lainnya') {
-                jenisWrap.classList.remove('hidden');
-            } else {
-                jenisWrap.classList.add('hidden');
-            }
+            if (jenisSelect.value === 'Lainnya') jenisWrap.classList.remove('hidden');
+            else jenisWrap.classList.add('hidden');
         }
-
         function togglePeran() {
-            if (peranSelect.value === 'Lainnya') {
-                peranWrap.classList.remove('hidden');
-            } else {
-                peranWrap.classList.add('hidden');
-            }
+            if (peranSelect.value === 'Lainnya') peranWrap.classList.remove('hidden');
+            else peranWrap.classList.add('hidden');
         }
 
-        // init
         toggleJenis();
         togglePeran();
-
-        // on change
         jenisSelect.addEventListener('change', toggleJenis);
         peranSelect.addEventListener('change', togglePeran);
     </script>
+
+    <script>
+        // ===== Kecamatan -> Kelurahan (AUTO FILTER) =====
+        const kecamatanSelect = document.getElementById('kecamatan_kejadian');
+        const kelurahanSelect = document.getElementById('kelurahan_kejadian');
+
+        const oldKelurahan = @json(old('kelurahan_kejadian'));
+
+        const kelurahanByKec = {
+            'Mojoroto': ['Bandar Kidul','Bandar Lor','Banjarmlati','Campurejo','Dermo','Gayam','Lirboyo','Mojoroto','Mrican','Ngampel','Pojok','Sukorame','Tamanan'],
+            'Kota': ['Balowerti','Banjaran','Dandangan','Jagalan','Kaliombo','Kampung Dalem','Kemasan','Manisrenggo','Ngadirejo','Ngronggo','Pakelan','Pocanan','Rejomulyo','Ringinanom','Semampir','Setono Gedong','Setono Pande','Singonegaran'],
+            'Pesantren': ['Banaran','Bangsal','Betet','Blabak','Burengan','Jamsaren','Ketami','Pakunden','Pesantren','Tempurejo','Tinalan','Tosaren']
+        };
+
+        // NOTE: aku sengaja tidak memasukkan "Kediri?" karena tidak ada di list enum kelurahan kamu.
+        // Jadi kita hapus item yang tidak ada.
+        // (Aku tulis begini biar kamu tahu kenapa listnya disesuaikan)
+
+        function setKelurahanOptions(kec, selectedKel = null) {
+            kelurahanSelect.innerHTML = '<option value="">-- Pilih Kelurahan --</option>';
+
+            if (!kec || !kelurahanByKec[kec]) return;
+
+            kelurahanByKec[kec].forEach((kel) => {
+                const opt = document.createElement('option');
+                opt.value = kel;
+                opt.textContent = kel;
+                if (selectedKel && selectedKel === kel) opt.selected = true;
+                kelurahanSelect.appendChild(opt);
+            });
+        }
+
+        // init on load
+        setKelurahanOptions(kecamatanSelect.value, oldKelurahan);
+
+        // change
+        kecamatanSelect.addEventListener('change', function() {
+            setKelurahanOptions(this.value, null);
+        });
+    </script>
+
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-    // ====== SWEETALERT KONFIRMASI SUBMIT ======
-    const form = document.querySelector('form[action="{{ route('laporan-kasus.store') }}"]');
-    const btnSubmit = document.getElementById('btn-submit');
+        // ====== SWEETALERT KONFIRMASI SUBMIT ======
+        const form = document.querySelector('form[action="{{ route('laporan-kasus.store') }}"]');
+        const btnSubmit = document.getElementById('btn-submit');
 
-    if (form && btnSubmit) {
-        form.addEventListener('submit', function (e) {
-            e.preventDefault();
+        if (form && btnSubmit) {
+            form.addEventListener('submit', function (e) {
+                e.preventDefault();
 
+                Swal.fire({
+                    title: 'Yakin ingin mengirim laporan?',
+                    html: `
+                        <div style="text-align:left;font-size:14px;line-height:1.5">
+                            Pastikan data yang Anda isi sudah benar.<br>
+                            <b>Identitas pelapor akan dijaga kerahasiaannya.</b>
+                        </div>
+                    `,
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonText: 'Ya, Kirim',
+                    cancelButtonText: 'Batal',
+                    confirmButtonColor: '#1d4ed8',
+                    cancelButtonColor: '#6b7280',
+                    reverseButtons: true,
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        Swal.fire({
+                            title: 'Mengirim...',
+                            text: 'Mohon tunggu sebentar.',
+                            allowOutsideClick: false,
+                            allowEscapeKey: false,
+                            didOpen: () => Swal.showLoading()
+                        });
+
+                        form.submit();
+                    }
+                });
+            });
+        }
+
+        // ====== SWEETALERT SUKSES (SETELAH REDIRECT) ======
+        @if (session('success'))
             Swal.fire({
-                title: 'Yakin ingin mengirim laporan?',
+                title: 'Laporan berhasil dikirim',
                 html: `
-                    <div style="text-align:left;font-size:14px;line-height:1.5">
-                        Pastikan data yang Anda isi sudah benar.<br>
-                        <b>Identitas pelapor akan dijaga kerahasiaannya.</b>
+                    <div style="font-size:14px;line-height:1.6">
+                        {{ session('success') }}<br><br>
+                        <b>Catatan:</b> Pihak <b>BNN Kota Kediri</b> akan segera menindak lanjuti laporan Anda.
                     </div>
                 `,
-                icon: 'question',
-                showCancelButton: true,
-                confirmButtonText: 'Ya, Kirim',
-                cancelButtonText: 'Batal',
-                confirmButtonColor: '#1d4ed8',
-                cancelButtonColor: '#6b7280',
-                reverseButtons: true,
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    // optional: tampilkan loading
-                    Swal.fire({
-                        title: 'Mengirim...',
-                        text: 'Mohon tunggu sebentar.',
-                        allowOutsideClick: false,
-                        allowEscapeKey: false,
-                        didOpen: () => Swal.showLoading()
-                    });
-
-                    form.submit();
-                }
+                icon: 'success',
+                confirmButtonText: 'OK',
+                confirmButtonColor: '#16a34a'
             });
-        });
-    }
-
-    // ====== SWEETALERT SUKSES (SETELAH REDIRECT) ======
-    @if (session('success'))
-        Swal.fire({
-            title: 'Laporan berhasil dikirim',
-            html: `
-                <div style="font-size:14px;line-height:1.6">
-                    {{ session('success') }}<br><br>
-                    <b>Catatan:</b> Pihak <b>BNN Kota Kediri</b> akan segera menindak lanjuti laporan Anda.
-                </div>
-            `,
-            icon: 'success',
-            confirmButtonText: 'OK',
-            confirmButtonColor: '#16a34a'
-        });
-    @endif
-</script>
-
+        @endif
+    </script>
 
 </body>
 </html>

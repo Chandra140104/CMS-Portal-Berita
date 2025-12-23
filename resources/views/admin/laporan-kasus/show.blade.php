@@ -49,6 +49,23 @@
 
         <hr>
 
+        <!-- LOKASI KEJADIAN (BARU) -->
+        <div>
+            <h2 class="font-bold mb-2">Lokasi Kejadian</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                <div>
+                    <div class="text-xs text-gray-500">Kecamatan</div>
+                    <div class="font-semibold">{{ $laporan->kecamatan_kejadian ?? '-' }}</div>
+                </div>
+                <div>
+                    <div class="text-xs text-gray-500">Kelurahan</div>
+                    <div class="font-semibold">{{ $laporan->kelurahan_kejadian ?? '-' }}</div>
+                </div>
+            </div>
+        </div>
+
+        <hr>
+
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
                 <h2 class="font-bold mb-2">Informasi Narkoba</h2>

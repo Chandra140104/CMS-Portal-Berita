@@ -22,6 +22,8 @@ class LaporanKasusAdminController extends Controller
                         ->orWhere('pelapor_telepon', 'like', "%{$q}%")
                         ->orWhere('terlapor_nama', 'like', "%{$q}%")
                         ->orWhere('terlapor_alamat', 'like', "%{$q}%")
+                        ->orWhere('kecamatan_kejadian', 'like', "%{$q}%")
+                        ->orWhere('kelurahan_kejadian', 'like', "%{$q}%")
                         ->orWhere('jenis_narkoba', 'like', "%{$q}%")
                         ->orWhere('peran_terlapor', 'like', "%{$q}%");
                 });
@@ -38,10 +40,6 @@ class LaporanKasusAdminController extends Controller
         return view('admin.laporan-kasus.show', compact('laporan'));
     }
 
-    /**
-     * Export Excel (Admin only)
-     * - ikutkan filter pencarian q jika ada
-     */
     public function exportExcel(Request $request)
     {
         $q = $request->query('q');

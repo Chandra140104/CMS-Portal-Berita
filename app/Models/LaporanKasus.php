@@ -17,11 +17,12 @@ class LaporanKasus extends Model
         'pelapor_alamat',
 
         'terlapor_nama',
-        'terlapor_telepon',
         'terlapor_alamat',
 
-        'foto_lokasi_path',
+        'kecamatan_kejadian',
+        'kelurahan_kejadian',
 
+        'foto_lokasi_path',
 
         'jenis_narkoba',
         'jenis_narkoba_lainnya',

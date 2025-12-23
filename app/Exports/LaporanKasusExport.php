@@ -29,6 +29,8 @@ class LaporanKasusExport implements FromCollection, WithHeadings
                         ->orWhere('pelapor_alamat', 'like', "%{$q}%")
                         ->orWhere('terlapor_nama', 'like', "%{$q}%")
                         ->orWhere('terlapor_alamat', 'like', "%{$q}%")
+                        ->orWhere('kecamatan_kejadian', 'like', "%{$q}%")
+                        ->orWhere('kelurahan_kejadian', 'like', "%{$q}%")
                         ->orWhere('terlapor_profesi', 'like', "%{$q}%")
                         ->orWhere('kantor_alamat', 'like', "%{$q}%")
                         ->orWhere('jenis_narkoba', 'like', "%{$q}%")
@@ -49,11 +51,17 @@ class LaporanKasusExport implements FromCollection, WithHeadings
 
                 'terlapor_nama',
                 'terlapor_alamat',
+
+                'kecamatan_kejadian',
+                'kelurahan_kejadian',
+
                 'terlapor_profesi',
                 'kantor_alamat',
 
                 'jenis_narkoba',
                 'jenis_narkoba_lainnya',
+                'jumlah_narkoba',
+
                 'peran_terlapor',
                 'peran_terlapor_lainnya',
 
@@ -78,11 +86,17 @@ class LaporanKasusExport implements FromCollection, WithHeadings
 
             'Nama Terlapor',
             'Alamat Terlapor',
+
+            'Kecamatan Kejadian',
+            'Kelurahan Kejadian',
+
             'Profesi Terlapor',
             'Alamat Kantor',
 
             'Jenis Narkoba',
             'Jenis Narkoba (Lainnya)',
+            'Jumlah Narkoba',
+
             'Peran Terlapor',
             'Peran Terlapor (Lainnya)',
 

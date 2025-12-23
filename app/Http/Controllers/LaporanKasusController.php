@@ -25,9 +25,12 @@ class LaporanKasusController extends Controller
             'pelapor_alamat'  => ['required', 'string', 'max:255'],
 
             // Terlapor
-            'terlapor_nama'    => ['required', 'string', 'max:255'],
-            'terlapor_telepon' => ['nullable', 'string', 'max:20'],
-            'terlapor_alamat'  => ['required', 'string', 'max:255'],
+            'terlapor_nama'   => ['required', 'string', 'max:255'],
+            'terlapor_alamat' => ['required', 'string', 'max:255'],
+
+            // Lokasi Kejadian (BARU)
+            'kecamatan_kejadian' => ['required', 'in:Mojoroto,Kota,Pesantren'],
+            'kelurahan_kejadian' => ['required', 'in:Balowerti,Banaran,Bandar Kidul,Bandar Lor,Bangsal,Banjarmlati,Banjaran,Blabak,Burengan,Campurejo,Dandangan,Gayam,Jamsaren,Kaliombo,Kampung Dalem,Karanganyar,Ketami,Kwadungan,Lirboyo,Manisrenggo,Mrican,Mojoroto,Ngadirejo,Ngronggo,Pakelan,Pakunden,Panglungan,Pesantren,Pojok,Rejomulyo,Ringinanom,Semampir,Setono Gedong,Setono Pande,Singonegaran,Sukorame,Tamanan,Tempurejo,Tinalan,Tosaren'],
 
             // Foto
             'foto_lokasi' => ['nullable', 'file', 'mimes:jpg,jpeg,png,webp', 'max:4096'],
@@ -65,8 +68,7 @@ class LaporanKasusController extends Controller
         // ===== UPLOAD FOTO (SEBELUM TRANSAKSI) =====
         $fotoLokasiPath = null;
         if ($request->hasFile('foto_lokasi')) {
-            // simpan ke storage/app/public/laporan-kasus
-            $fotoLokasiPath = $request->file('foto_lokasi')->store('laporan-kasus', 'public');
+            $fotoLokasiPath = $request->file('foto_lokasi')->store('laporan-kasus/foto-lokasi', 'public');
         }
 
         $nomorLaporan = null;
@@ -78,7 +80,6 @@ class LaporanKasusController extends Controller
             $bulan = (int) now()->format('n');
             $tahun = (int) now()->format('Y');
 
-            // lock agar urutan aman dari tabrakan
             $countBulanIni = LaporanKasus::whereYear('created_at', $tahun)
                 ->whereMonth('created_at', $bulan)
                 ->lockForUpdate()
@@ -119,6 +120,9 @@ class LaporanKasusController extends Controller
                 . "<b>Terlapor:</b> {$laporan->terlapor_nama}\n"
                 . "<b>Alamat Terlapor:</b> {$laporan->terlapor_alamat}\n"
                 . "━━━━━━━━━━━━━━━━━━\n"
+                . "<b>Kecamatan Kejadian:</b> {$laporan->kecamatan_kejadian}\n"
+                . "<b>Kelurahan Kejadian:</b> {$laporan->kelurahan_kejadian}\n"
+                . "━━━━━━━━━━━━━━━━━━\n"
                 . "<b>Jenis Narkoba:</b> {$laporan->jenis_narkoba}{$jenisTambahan}\n"
                 . "<b>Jumlah:</b> {$laporan->jumlah_narkoba}\n"
                 . "<b>Peran:</b> {$laporan->peran_terlapor}{$peranTambahan}\n"
@@ -133,7 +137,6 @@ class LaporanKasusController extends Controller
 
             $telegram->sendMessage($msg);
 
-            // kirim foto lokasi kalau ada (SETELAH $laporan ADA)
             if (!empty($laporan->foto_lokasi_path)) {
                 $abs = storage_path('app/public/' . $laporan->foto_lokasi_path);
                 if (file_exists($abs)) {

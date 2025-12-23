@@ -118,8 +118,120 @@
                 </div>
             </a>
         @endif
-
     </div>
+
+    {{-- CHART (ADMIN ONLY) --}}
+    @if ($isAdmin)
+        <div class="mt-10 grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+            {{-- Kecamatan (BAR) --}}
+            <div class="bg-white rounded-md border border-gray-100 p-6 shadow-md shadow-black/5">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-lg font-semibold">Diagram Kecamatan Kejadian</h2>
+                    <span class="text-xs text-gray-500">Total laporan per kecamatan</span>
+                </div>
+                <div class="h-72">
+                    <canvas id="chartKecamatan"></canvas>
+                </div>
+            </div>
+
+            {{-- Kelurahan (PIE) --}}
+            <div class="bg-white rounded-md border border-gray-100 p-6 shadow-md shadow-black/5">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-lg font-semibold">Diagram Kelurahan Kejadian</h2>
+                    <span class="text-xs text-gray-500">Persentase (Top 15 kelurahan)</span>
+                </div>
+                <div class="h-72">
+                    <canvas id="chartKelurahan"></canvas>
+                </div>
+            </div>
+
+        </div>
+
+        {{-- Chart.js --}}
+        <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+
+        <script>
+            const kecLabels = @json($kecamatanLabels ?? []);
+            const kecData   = @json($kecamatanCounts ?? []);
+
+            const kelLabels = @json($kelurahanLabels ?? []);
+            const kelData   = @json($kelurahanCounts ?? []);
+
+            // ===== Kecamatan Chart (BAR) - Y bulat saja =====
+            new Chart(document.getElementById('chartKecamatan'), {
+                type: 'bar',
+                data: {
+                    labels: kecLabels,
+                    datasets: [{
+                        label: 'Jumlah Laporan',
+                        data: kecData,
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: (ctx) => ` ${ctx.raw} laporan`
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                precision: 0,  // bilangan bulat
+                                stepSize: 1    // tidak ada 0.5 / 1.5
+                            },
+                            title: { display: true, text: 'Jumlah Laporan' }
+                        },
+                        x: {
+                            title: { display: true, text: 'Kecamatan' }
+                        }
+                    }
+                }
+            });
+
+            // ===== Kelurahan Chart (PIE) - persentase =====
+            new Chart(document.getElementById('chartKelurahan'), {
+                type: 'pie',
+                data: {
+                    labels: kelLabels,
+                    datasets: [{
+                        data: kelData,
+                        backgroundColor: [
+                            '#60a5fa','#34d399','#f87171','#fbbf24','#a78bfa',
+                            '#fb7185','#22d3ee','#c084fc','#4ade80','#f97316',
+                            '#38bdf8','#facc15','#e879f9','#818cf8','#fb923c'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom' },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const arr = context.dataset.data || [];
+                                    const total = arr.reduce((a, b) => a + Number(b || 0), 0);
+                                    const value = Number(context.raw || 0);
+                                    const pct = total > 0 ? ((value / total) * 100).toFixed(1) : '0.0';
+                                    return ` ${context.label}: ${value} (${pct}%)`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        </script>
+    @endif
 
     <!-- ABOUT SECTION -->
     <div class="mt-10 bg-white rounded-md border border-gray-100 p-6 shadow-md shadow-black/5">
